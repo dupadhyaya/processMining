@@ -35,4 +35,4 @@ aevents1 %>% dotted_chart()
 
 PMV_SA1 <- aevents1 %>% animate_process(duration=30, sec=frequency('relative'), legend='color', mapping = token_aes(color=token_scale('leadSource', scale='ordinal', range=c('red','blue','green','orange','pink','gray'))))
 PMV_SA1 
-htmlwidgets::saveWidget(widget=PMV_SA1, file='E:/PMO/PMV/PMV_SA1.html', title='Process Mining Video : Campus Admissions', libdir ='E:/PMO/PMV/libdep', selfcontained = T) 
+htmlwidgets::saveWidget(widget=PMV_SA1, file='E:/AU/PM/PMV_SA1.html', title='Process Mining Video : Campus Admissions', libdir ='E:/AU/PM/lib', selfcontained = T) 
