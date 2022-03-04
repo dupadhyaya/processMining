@@ -4,23 +4,25 @@ pacman::p_load(readxl, dplyr, ggplot2, reshape2, gridExtra, zoo, xts, lubridate,
 
 options(scipen=99)
 list.files('C:/Users/du//OneDrive - Amity University/admissions')
-flocDU="E:/AU/admission/MIS/adm19sumDates.csv"
-flocDU2 ='C:/Users/du/OneDrive - Amity University/admissions/admDatesAURJ_aug19.csv'
-flocAU="C:/Users/admin/OneDrive - Amity University/admissions/admDatesAURJ_aug19.csv"
+floc="E:/AU/admission/MIS/adm19sumDates.csv"
+
 #
-fileloc = flocDU
+fileloc = floc
 #all = read_excel(path=fileloc , sheet='master')
-aurj = read.csv(file=flocDU, stringsAsFactors = F)
+aurj = read.csv(file=floc, stringsAsFactors = F)
 #
 #
 data = aurj
 head(data)
-dim(data)
-str(data)
 names(data)
+data1 <- data %>% select(all_of(c('campus', 'formNo', 'gender', 'applMode', 'state', 'admStatus', 'city', dateCols)))
+dim(data1)
+str(data1)
+table(data$campus1)
+names(data1)
 df1 = data
 cols1 = c('campus','formNo', 'gender', 'applMode')
-cols2 = c('formDate', 'programCode', 'skypeDate','sopDate', 'portfolioDate','admEntryBasis', 'offerDate','schPerc', 'feePayDate','feePaidDate', 'feeWOsch', 'feeAmtDue', 'unwillingDate','feePaid', 'withdrawlDate', 'admStatus', 'city','state','remarks')
+cols2 = c('formDate', 'programCode', 'skypeDate','sopDate', 'portfolioDate','admEntryBasis', 'offerDate','schPerc', 'feePayDate','feePaidDate', 'feeWOsch', 'feeAmtDue','feePaid', 'withdrawlDate', 'admStatus', 'city','state','remarks')
 (allcols = c(cols1, cols2))
 length(allcols)
 cbind(allcols, names(data))
@@ -35,16 +37,20 @@ dateCols[!dateCols %in% names(df1)]
 df2 = df1[,c('campus','formNo', 'gender', 'admStatus', 'city', dateCols)]
 names(df2)
 head(df2)
-colSums(is.na(df2))
+
+
+colSums(!is.na(data1))
 str(df2)
 #------
-df2Melt = reshape2::melt(df2, id.vars=c('campus','formNo','gender','admStatus','city'), value.name='timestamp', variable.name='activity')  #many blank rows
+names(data1)
+df2Melt = reshape2::melt(data1, id.vars=c('campus','formNo','gender','applMode', 'admStatus','state','city'), value.name='timestamp', variable.name='activity')  #many blank rows
 head(df2Melt)
 str(df2Melt)
 summary(df2Melt$timestamp)
 
 df2Melt$timestamp = as.Date(df2Melt$timestamp,format='%d-%b-%y')
-summary(df2Melt$timestamp)
+summary(df2Melt)
+df2Melt %>% filter(is.na(timestamp()))  
 #df2Melt$timestamp = as.POSIXct(df2Melt$timestamp)  #this can be done later
 #df2$timestamp = as.numeric(df2$timestamp)
 #anytime::anytime(df2$timestamp)
@@ -55,7 +61,7 @@ dim(df2Melt)
 colSums(is.na(df2Melt))
 
 #consider only complete cases--- ie where dates are not empty
-df3 = df2Melt[complete.cases(df2Melt),]
+df3 <- df2Melt %>% filter(!is.na(timestamp))
 head(df3)
 #df3=df2Melt
 colSums(is.na(df3))
@@ -68,6 +74,9 @@ write.csv(df3, 'E:/AU/adata/aurjForms.csv', row.names = F)
 
 #prepare for PM----
 df3$timestamp = as.POSIXct(df3$timestamp)  #
+names(df3)
+str(df3)
+head(df3)
 #simple Event
 events1 <- bupaR::simple_eventlog(eventlog = df3,   case_id = 'formNo',  activity_id = 'activity', timestamp = 'timestamp')
 
