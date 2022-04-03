@@ -27,32 +27,32 @@ aEvent2 %>% animate_process(duration=10)
 aEvent2 %>% trace_explorer(coverage=1)
 aEvent2 %>% precedence_matrix() %>% plot()
 aEvent2 %>% dotted_chart()
-aEvent2 %>%  resource_frequency("resource") %>% plot()
-aEvent2 %>%  resource_specialisation("resource") %>% plot()
+aEvent2 %>%  resource_frequency("resource") %>% plot(guide='none')
+aEvent2 %>%  resource_specialisation("resource") %>% plot(guide='none')
 
 
 aEvent2 %>% activity_presence() %>% plot()  #not clear
-aEvent2 %>%  resource_frequency("resource")
-aEvent2 %>%  resource_frequency("resource") %>% plot()
+aEvent2 %>% resource_frequency("resource")
+aEvent2 %>% resource_frequency("resource") %>% plot()
 aEvent2 %>% resource_specialisation("resource")
 aEvent2 %>% resource_specialisation("resource") %>% plot()
 
-aEvent2 %>%  activity_frequency("activity") %>% plot()
-aEvent2 %>%  start_activities("resource-activity") %>% plot()
-aEvent2 %>%  end_activities("resource-activity") %>% plot()
+aEvent2 %>% activity_frequency("activity") %>% plot()
+aEvent2 %>% start_activities("resource-activity") %>% plot()
+aEvent2 %>% end_activities("resource-activity") %>% plot()
 aEvent2 %>% activity_presence() %>%  plot
 aEvent2 %>% activity_presence()
-aEvent2 %>%  activity_frequency("activity")
-aEvent2 %>%  activity_frequency("activity") %>% plot()
+aEvent2 %>% activity_frequency("activity")
+aEvent2 %>% activity_frequency("activity") %>% plot()
 aEvent2 %>% trace_coverage("trace") %>% plot() #??
-aEvent2 %>%   trace_length("log") %>%   plot() #ads from 200 to 300 times
+aEvent2 %>% trace_length("log") %>%   plot() #ads from 200 to 300 times
 aEvent2 %>% process_map(type = frequency("relative_case"))
-aEvent2 %>%  process_map(type_nodes = frequency("relative_case"),  type_edges = performance(mean))
-aEvent2 %>%  process_map(sec=frequency('relative'), type=frequency('absolute'))
+aEvent2 %>% process_map(type_nodes = frequency("relative_case"),  type_edges = performance(mean))
+aEvent2 %>% process_map(sec=frequency('relative'), type=frequency('absolute'))
 aEvent2 %>% process_map(sec=frequency('absolute'), type=frequency('relative'), fixed_edge_width=T, layout = layout_pm(edge_weight = T, fixed_positions = T))
 
-(dc1a1 <- aEvent2 %>% dotted_chart(x='absolute', y='start_day'))
-(dc1a2 <- aEvent2 %>% dotted_chart(x='absolute', y='start_week'))
+(dc1a1 <- aEvent2 %>% dotted_chart(x='absolute', y='start_day', guide='none'))
+(dc1a2 <- aEvent2 %>% dotted_chart(x='absolute', y='start_week', guide="none"))
 
 (dc1b1 <- aEvent2 %>% dotted_chart(x='relative', units='weeks'))
 (dc1b2 <- aEvent2 %>% dotted_chart(x='relative',units='days'))
@@ -108,3 +108,4 @@ aEvent2 %>% process_map(type = performance(FUN=max, color_edges = 'blue'))
 aEvent2 %>% process_map(type = performance(FUN=max, color_scale = 'Blues'))
 aEvent2 %>% process_map(type = performance(FUN=mean, flow_time='idle_time'))
 aEvent2 %>% process_map(type = performance(FUN=mean, flow_time='inter_start_time'))
+

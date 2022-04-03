@@ -7,18 +7,21 @@ gs1AURJ = 'https://docs.google.com/spreadsheets/d/1IFEewuvwwLMhRmp2ckvk5CsZdrWGd
 gs1=gs1AURJ
 (master <- as.data.frame(read_sheet(gs1, sheet='master')))
 #(sheets = master$sheet)
-
+sheet_properties(gs1)
 (statusDate = Sys.Date())
 (analysisDate = Sys.Date())
 (campus = 'AURJ')
-(merge = as.data.frame(read_sheet(gs1, sheet='merge', skip=3)))
-dim(merge) 
-names(merge)
-str(merge)
+(mergedData = as.data.frame(read_sheet(gs1, sheet='merge', skip=3)))
+dim(mergedData) 
+names(mergedData)
+str(mergedData)
+
 admData1
 df1 = admData1  #or merge
+df1 = mergedData
 names(df1)
 dim(df1)
+names(df1)
 df1 %>% filter(!is.na(feePaidDate)) %>% filter(formDate > feePaidDate) %>% select(formNo)
 df1 %>% filter(!is.na(feePaidDate)) %>% filter(formDate < feePaidDate) %>% select(formNo)
 df1 %>% filter(formNo %in% c(8154086))
@@ -130,14 +133,24 @@ df2 %>% group_by(admStatus) %>% summarise(n=n())
 processmapR::trace_explorer(events1, coverage=1,.abbreviate = F)
 table(events1$admStatus)
 
+
+head(events1)
+str(events1)
+animate_process(events1,    legend = "color",   mapping = token_aes(color = token_scale("state", scale = "ordinal", range = RColorBrewer::brewer.pal(8, "Paired"))), duration=20)
+
+events1 %>% filter(state %in% c('UP','DL', 'AP')) %>% animate_process(.,    legend = "color",   mapping = token_aes(color = token_scale("state", scale = "ordinal", range = RColorBrewer::brewer.pal(8, "Paired"))), duration=20)
+
+
+
+
 animateAllDates <- processanimateR::animate_process(events1, sec=frequency('absolute'), duration=60, legend='color', repeat_delay = 2, repeat_count=2, mode='absolute', inital_state='paused', espsilon_time=.3, mapping = token_aes(color= token_scale('admStatus', scale='ordinal', range=c('green','blue','red','yellow','violet'))))
 animateAllDates
-htmlwidgets::saveWidget(animateAllDates, file=paste0('E:/PMO/PMV/allDates20',campus,Sys.Date(),'.html'), libdir='E:/PMO/PMV/libdep', selfcontained=T)
+htmlwidgets::saveWidget(animateAllDates, file=paste0('E:/AU/PM/allDates20',campus,Sys.Date(),'.html'), libdir='E:/AU/PM/libdep', selfcontained=T)
 #use OBS to save video
 
 animateOthers <- events1 %>% filter(!admStatus %in% 'Admitted') %>% processanimateR::animate_process(sec=frequency('relative'),repeat_delay = 2, mode='absolute', duration=60, legend='color', repeat_count=2, inital_state='paused', espsilon_time=.4, mapping = token_aes(color= token_scale('admStatus', scale='ordinal', range=c('green','blue','red','yellow','violet'))))
 animateOthers
-htmlwidgets::saveWidget(animateOthers, file=paste0('E:/PMO/PMV/otherDates20',campus, Sys.Date(),'.html'), libdir='E:/PMO/PMV/libdep', selfcontained=T)
+htmlwidgets::saveWidget(animateOthers, file=paste0('E:/AU/PM/otherDates20',campus, Sys.Date(),'.html'), libdir='E:/AU/PM/libdep', selfcontained=T)
 
 ?animate_process
 
